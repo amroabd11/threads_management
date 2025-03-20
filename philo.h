@@ -1,27 +1,41 @@
 #ifndef PHILO_H
 #define PHILO_H
-# include <pthread.h>
-# include <stdlib.h>
-# include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <sys/time.h>
 typedef struct philo
 {
-	unsigned int	number_philos;
-	unsigned int	t_eat;
-	unsigned int	t_die;
-	unsigned int	start_time;
+	int				number_philos;
+	int				t_eat;
+	int				died;
+	int				s_time;
+	int				t_die;
+	int				start_time;
 	int				id;
-	unsigned int	t_sleep;
-	unsigned int	t_think;
+	int				t_sleep;
+	int				t_think;
 	int				n_meals;
 	int				meals_eaten;
-	int				l_fork;
-	int				r_fork;
-	unsigned int	last_meal;
+	int				last_meal;
+	pthread_mutex_t	*printing;
+	pthread_mutex_t	*l_fork;
+	pthread_mutex_t	*r_fork;
+	pthread_mutex_t *meal_mtx;
 	pthread_mutex_t	*forks;
 }	t_philo;
-void			args_validity(char **argv);
+
+int			args_validity(char **argv);
+int	limits_of_dying(t_philo *philo);
+void    *monitor_philos(void *arg);
 int				error_message(char *msg);
+long	get_time(void);
 unsigned int	ft_atoi(const char *str);
-void			init_philo_stuff(t_philo *philo, char **argv, int argc);
+void			init_philo(t_philo *philo, char **argv, int argc);
+void	init_mutex_for_forks(t_philo *philo, char *argv1);
+void	safe_print(t_philo *philo, char *msg);
+int	ft_strlen(char *str);
+int	check_dies(t_philo *philo);
 
 #endif

@@ -2,6 +2,6 @@
 
 int error_message(char *msg)
 {
-    write(2, msg, ft_strlen(msg));
+    write(1, msg, ft_strlen(msg));
     return (1);//TODO ft_strlen
 }
