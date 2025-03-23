@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:56:47 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/03/20 10:43:17 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/03/23 15:26:38 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,11 @@ void	*routine_ofphilo(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	if(philo->id % 2 == 0)
+		usleep(1);
 	while (1)
 	{
-		if (philo->died)
+		if (philo->dead_flag)
 			break;
 		if (philo->id % 2 == 0)
 		{
@@ -55,47 +57,49 @@ void	*routine_ofphilo(void *arg)
 	return (NULL);
 }
 
-int	create_threads(t_philo *philo)
+int	create_threads(t_data *data)
 {
 	int	i;
 	pthread_t		*threads;
-	pthread_t		*monitor;
+	pthread_t		monitor;
 
-	threads = malloc(sizeof(pthread_t) * philo->number_philos);
+	threads = malloc(sizeof(pthread_t) * data->philos->number_philos);
 	if (!threads)
 		return (1);
 	i = -1;
-	while (++i < philo->number_philos)
+	while (++i < data->philos->number_philos)
 	{
-		if (pthread_create(&threads[i], NULL, routine_ofphilo, &philo[i]) != 0)
+		if (pthread_create(&threads[i], NULL, routine_ofphilo, &data->philos[i]) != 0)
 			return (1);
 	}
 	i = -1;
-	pthread_create(&monitor, NULL, monitor_philos, &philo);//construct the function TODO
+	pthread_create(&monitor, NULL, monitor_philos, data);//construct the function TODO
 	pthread_join(monitor, NULL);
-	while (++i < philo->number_philos)
+	while (++i < data->philos->number_philos)
 		pthread_join(threads[i], NULL);
 	free(threads);
 	return (0);
 }
 
-int	threads_managing(t_philo *philo)
+void	cleanup(t_data data)
 {
 	int	i;
 
 	i = 0;
-	if (create_threads(philo) == 1)
+	while (i < data.philos->number_philos)
 	{
-		free(philo->forks);
-		return (1);
+		pthread_mutex_destroy(&data.forks[i]);
+		i++;
 	}
-	return (0);
+	pthread_mutex_destroy(&data.print_mtx);
+	pthread_mutex_destroy(&data.meal_mtx);
 }
 
 int	main(int argc, char **argv)
 {
-	t_philo	*philo;
+	t_data	simulation;
 
+	// simulation = malloc(sizeof(t_data));
 	if (!(argc == 5 || argc == 6))
 	{
 		printf("Use:./philo n_philo t_die t_eat t_sleep [n_meals]\n");
@@ -103,12 +107,17 @@ int	main(int argc, char **argv)
 	}
 	if (args_validity(argv) == 1)
 		return (1);
-	philo = (t_philo *)malloc(sizeof(t_philo) * ft_atoi(argv[1]));
-	if (!philo)
-		return (1);
-	init_mutex_for_forks(philo, argv[1]);
-	init_philo(philo, argv, argc);
-	if (threads_managing(philo) == 1)
-		printf("something goes wrong in threads and mutexes management\n");
+	init_mutex_for_forks(&simulation, argv[1]);//done
+	init_philo(&simulation, argv, argc);
+	simulation.all_ate = 0;
+	if (create_threads(&simulation) == 1)
+	{
+		printf("something goes wrong in threads management\n");
+		// free(simulation->forks);
+	}
+	exit(1);
+	cleanup(simulation);
+	// free(philo->forks);
+	// free(philo);
 	return (0);
 }

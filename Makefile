@@ -1,7 +1,7 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Wall -pthread
 NAME = philo
-SRC = main.c philo_utils.c errors.c base_functions.c 
+SRC = main.c philo_utils.c errors.c base_functions.c monitoring.c
 OBJ = ${SRC:.c=.o}
 
 all:$(NAME)

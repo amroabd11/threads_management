@@ -38,27 +38,13 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-int	limits_of_dying(t_philo *philo)
-{
-	pthread_mutex_lock(philo->deathmutex);
-	if(philo->died == 1)
-	{
-		pthread_mutex_unlock(philo->deathmutex);
-		return (1);
-	}
-	pthread_mutex_unlock(philo->deathmutex);
-	if(philo->n_meals > 0 && philo->meals_eaten >= philo->n_meals)
-		return (1);
-	return 0;
-}
-
 void	safe_print(t_philo *philo, char *msg)
 {
 	size_t	time;
 
-	pthread_mutex_lock(philo->printing);
-	time = get_time() - philo->s_time;
-	if (!check_dies(philo))
+	pthread_mutex_lock(philo->print_mtx);
+	time = get_time() - philo->last_meal;
+	if (!philo->dead_flag)
 		printf("%zu %d %s\n", time, philo->id, msg);
-	pthread_mutex_unlock(philo->printing);
+	pthread_mutex_unlock(philo->print_mtx);
 }
