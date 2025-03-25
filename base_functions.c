@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   base_functions.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/24 12:19:53 by aamraouy          #+#    #+#             */
+/*   Updated: 2025/03/25 13:13:03 by aamraouy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 unsigned int	ft_atoi(const char *str)
@@ -43,8 +55,8 @@ void	safe_print(t_philo *philo, char *msg)
 	size_t	time;
 
 	pthread_mutex_lock(philo->print_mtx);
-	time = get_time() - philo->last_meal;
+	time = get_time();
 	if (!philo->dead_flag)
-		printf("%zu %d %s\n", time, philo->id, msg);
+		printf("%zu %d %s\n", time - philo->start_time, philo->id, msg);
 	pthread_mutex_unlock(philo->print_mtx);
 }

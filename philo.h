@@ -1,37 +1,36 @@
 #ifndef PHILO_H
 #define PHILO_H
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <sys/time.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <pthread.h>
+# include <sys/time.h>
 typedef struct philo
 {
 	int				number_philos;
 	int				t_eat;
-	int				s_time;
 	int				t_die;
-	int				start_time;
+	long			start_time;
 	int				id;
 	int				t_sleep;
 	int				t_think;
 	int				n_meals;
 	int				meals_eaten;
+	int				*dead_flag;
 	long			last_meal;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*print_mtx;
-	int				dead_flag;
 	pthread_mutex_t	*meal_mtx;
 }	t_philo;
 
 typedef struct s_data {
-	t_philo         *philos;
-	int				all_ate;
-	pthread_mutex_t *forks;
-	pthread_mutex_t print_mtx;
-	pthread_mutex_t meal_mtx;
-	int             dead_flag;
+	t_philo			*philos;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	print_mtx;
+	pthread_mutex_t	death_mtx;
+	pthread_mutex_t	meal_mtx;
+	int				dead_flag;
 } t_data;
 
 int				args_validity(char **argv);

@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:45:45 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/03/23 13:49:00 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:30:41 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	init_philo(t_data *data, char **argv, int argc)
 
 	i = -1;
 	num_philos = ft_atoi(argv[1]);
-	if (!(data->philos = malloc(sizeof(t_data) * num_philos)))
+	if (!(data->philos = malloc(sizeof(t_philo) * num_philos)))
 		return ;
 	while (++i < num_philos)
 	{
@@ -73,13 +73,13 @@ void	init_philo(t_data *data, char **argv, int argc)
 		else
 			data->philos[i].n_meals = -1;
 		data->philos[i].meals_eaten = 0;
+		data->philos[i].start_time = get_time();
 		data->philos[i].last_meal = get_time();
 		data->philos[i].print_mtx = &data->print_mtx;
 		data->philos[i].meal_mtx = &data->meal_mtx;
-		data->philos[i].dead_flag = data->dead_flag;
+		data->philos[i].dead_flag = &data->dead_flag;
 		data->philos[i].l_fork = &data->forks[i];
 		data->philos[i].r_fork = &data->forks[(i + 1) % num_philos];
-		data->philos[i].dead_flag = data->dead_flag;
 	}
 }
 

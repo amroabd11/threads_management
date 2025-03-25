@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:56:47 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/03/23 15:26:38 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:36:25 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 void	followed_instructions(t_philo *philo)
 {
 	pthread_mutex_lock(philo->meal_mtx);
-	philo->last_meal = get_time();
-	philo->meals_eaten++;
-	pthread_mutex_unlock(philo->meal_mtx);
 	safe_print(philo, "is eating\n");
+	philo->meals_eaten++;
+	philo->last_meal = get_time();
 	usleep(philo->t_eat * 1000);
+	pthread_mutex_unlock(philo->meal_mtx);
 	pthread_mutex_unlock(philo->l_fork);
 	pthread_mutex_unlock(philo->r_fork);
 	safe_print(philo, "is sleeping\n");
@@ -34,11 +34,9 @@ void	*routine_ofphilo(void *arg)
 	philo = (t_philo *)arg;
 	if(philo->id % 2 == 0)
 		usleep(1);
-	while (1)
+	while (!(*philo->dead_flag))
 	{
-		if (philo->dead_flag)
-			break;
-		if (philo->id % 2 == 0)
+		if (philo->id % 2 == 0 || philo->id == philo->number_philos)
 		{
 			pthread_mutex_lock(philo->r_fork);
 			safe_print(philo, "has taken right fork\n");
@@ -70,11 +68,13 @@ int	create_threads(t_data *data)
 	while (++i < data->philos->number_philos)
 	{
 		if (pthread_create(&threads[i], NULL, routine_ofphilo, &data->philos[i]) != 0)
-			return (1);
+			break ;
 	}
 	i = -1;
-	pthread_create(&monitor, NULL, monitor_philos, data);//construct the function TODO
-	pthread_join(monitor, NULL);
+	if (pthread_create(&monitor, NULL, monitor_philos, data) != 0)
+		return (1);
+	//check if a dead flag has been set and then detach the thread
+	// pthread_join(monitor, NULL);//fait independament 
 	while (++i < data->philos->number_philos)
 		pthread_join(threads[i], NULL);
 	free(threads);
@@ -107,17 +107,15 @@ int	main(int argc, char **argv)
 	}
 	if (args_validity(argv) == 1)
 		return (1);
-	init_mutex_for_forks(&simulation, argv[1]);//done
+	init_mutex_for_forks(&simulation, argv[1]);
 	init_philo(&simulation, argv, argc);
-	simulation.all_ate = 0;
 	if (create_threads(&simulation) == 1)
 	{
 		printf("something goes wrong in threads management\n");
 		// free(simulation->forks);
 	}
-	exit(1);
 	cleanup(simulation);
-	// free(philo->forks);
-	// free(philo);
+	free(simulation.forks);
+	free(simulation.philos);
 	return (0);
 }
