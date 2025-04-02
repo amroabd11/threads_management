@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   base_functions.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kali <kali@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:19:53 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/03/25 13:13:03 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/03/27 01:48:44 by kali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	safe_print(t_philo *philo, char *msg)
 
 	pthread_mutex_lock(philo->print_mtx);
 	time = get_time();
-	if (!philo->dead_flag)
+	if (!*philo->dead_flag)
 		printf("%zu %d %s\n", time - philo->start_time, philo->id, msg);
 	pthread_mutex_unlock(philo->print_mtx);
 }

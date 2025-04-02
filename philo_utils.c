@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kali <kali@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:45:45 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/03/25 12:30:41 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/03/28 18:13:59 by kali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	init_philo(t_data *data, char **argv, int argc)
 		data->philos[i].start_time = get_time();
 		data->philos[i].last_meal = get_time();
 		data->philos[i].print_mtx = &data->print_mtx;
+		// data->death_mtx ;
 		data->philos[i].meal_mtx = &data->meal_mtx;
 		data->philos[i].dead_flag = &data->dead_flag;
 		data->philos[i].l_fork = &data->forks[i];
@@ -97,6 +98,7 @@ void	init_mutex_for_forks(t_data *data, char *argv1)
 	while (++i < num_philos)
 		pthread_mutex_init(&data->forks[i], NULL);
 	pthread_mutex_init(&data->print_mtx, NULL);
+	pthread_mutex_init(&data->death_mtx, NULL);
 	pthread_mutex_init(&data->meal_mtx, NULL);
 }
 

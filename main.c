@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kali <kali@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:56:47 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/03/25 14:36:25 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/03/28 18:22:09 by kali             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ void	*routine_ofphilo(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	if(philo->id % 2 == 0)
-		usleep(1);
-	while (!(*philo->dead_flag))
+	while (1)
 	{
-		if (philo->id % 2 == 0 || philo->id == philo->number_philos)
+		if (*philo->dead_flag == 1)
+			return (NULL);
+		if (philo->id % 2 == 0)
 		{
 			pthread_mutex_lock(philo->r_fork);
 			safe_print(philo, "has taken right fork\n");
@@ -73,10 +73,13 @@ int	create_threads(t_data *data)
 	i = -1;
 	if (pthread_create(&monitor, NULL, monitor_philos, data) != 0)
 		return (1);
-	//check if a dead flag has been set and then detach the thread
-	// pthread_join(monitor, NULL);//fait independament 
+	pthread_detach(monitor);
 	while (++i < data->philos->number_philos)
+	{
+		// if (data->philos[i].dead_flag)
+			// pthread_detach(data->p);
 		pthread_join(threads[i], NULL);
+	}
 	free(threads);
 	return (0);
 }
