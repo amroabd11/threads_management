@@ -3,46 +3,48 @@
 /*                                                        :::      ::::::::   */
 /*   monitoring.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kali <kali@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:10:26 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/03/28 18:32:14 by kali             ###   ########.fr       */
+/*   Updated: 2025/04/04 11:01:52 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	check_philo_meals(t_data *data, int i, int *meals)
+int	check_philo_meals(t_data *data, int i)
 {
 	int	all_ate;
+	// int	meals;
 
 	all_ate = 0;
 	while (++i < data->philos[0].number_philos)
 	{
+		pthread_mutex_lock(data->philos[i].meal_mtx);
 		if (data->philos[i].n_meals != -1 &&
-		meals[i] >= data->philos[i].n_meals)
+		data->philos[i].meals_eaten >= data->philos[i].n_meals)
 			all_ate++;
+		pthread_mutex_unlock(data->philos[i].meal_mtx);
 	}
-	if (all_ate == data->philos->number_philos)
+	if (all_ate == data->philos[0].number_philos)
 	{
 		printf("all philos ate\n");
-		pthread_mutex_lock(&data->death_mtx);//TODO
+		pthread_mutex_lock(&data->death_mtx);
 		data->dead_flag = 1;
 		pthread_mutex_unlock(&data->death_mtx);
-		return (0);
+		return (1);
 	}
-	return (1);
+	return (0);
 }
 
 int	death_check(long time_since_meal, t_data *data, int i)
 {
-	// printf("time since _meal : %ld\n", time_since_meal);
-	if (time_since_meal >= data->philos[i].t_die)
+	if (time_since_meal > data->philos[i].t_die)
 	{
 		if (!data->dead_flag)
 		{
 			pthread_mutex_lock(&data->death_mtx);
-			data->dead_flag = 1;
+			*data->philos[i].dead_flag = 1;
 			printf("%ld %d died\n", get_time() - data->philos[i].start_time, data->philos[i].id);
 			pthread_mutex_unlock(&data->death_mtx);
 		}
@@ -53,33 +55,26 @@ int	death_check(long time_since_meal, t_data *data, int i)
 
 void	*monitor_philos(void *arg)
 {
-	int		i;
 	t_data *data;
 	long	time_since_meal;
-	int		*meals;
+	int		i;
 
 	data = (t_data *)arg;
-	meals = malloc(4 * data->philos[0].number_philos);
 	while (1)
 	{
-		// pthread_mutex_lock(&data->death_mtx);
-		// if (data->dead_flag)
-		// {
-			// pthread_mutex_unlock(&data->death_mtx);
-			// break ;
-		// }			
-		// pthread_mutex_unlock(&data->death_mtx);
 		i = -1;
 		while (++i < data->philos[0].number_philos)
 		{
-			// pthread_mutex_lock(&data->meal_mtx);
+			pthread_mutex_lock(data->philos[i].meal_mtx);
 			time_since_meal = get_time() - data->philos[i].last_meal;
-			meals[i] = data->philos[i].meals_eaten; //check for every thread 	
-			// pthread_mutex_unlock(&data->meal_mtx);
 			if (death_check(time_since_meal, data, i))
+			{
+				pthread_mutex_unlock(data->philos[i].meal_mtx);
 				return (NULL);
+			}
+			pthread_mutex_unlock(data->philos[i].meal_mtx);
 		}
-		if (!check_philo_meals(data, -1, meals))
+		if (check_philo_meals(data, -1))
 			return (NULL);
 	}
 	return (NULL);

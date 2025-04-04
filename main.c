@@ -3,84 +3,59 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kali <kali@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:56:47 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/03/28 18:22:09 by kali             ###   ########.fr       */
+/*   Updated: 2025/04/04 11:09:03 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	followed_instructions(t_philo *philo)
-{
-	pthread_mutex_lock(philo->meal_mtx);
-	safe_print(philo, "is eating\n");
-	philo->meals_eaten++;
-	philo->last_meal = get_time();
-	usleep(philo->t_eat * 1000);
-	pthread_mutex_unlock(philo->meal_mtx);
-	pthread_mutex_unlock(philo->l_fork);
-	pthread_mutex_unlock(philo->r_fork);
-	safe_print(philo, "is sleeping\n");
-	usleep(philo->t_sleep * 1000);
-	safe_print(philo, "is thinking\n");
-}
 
 void	*routine_ofphilo(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	if (philo->id % 2 == 0)
+		custom_sleep(1, philo);
 	while (1)
 	{
-		if (*philo->dead_flag == 1)
-			return (NULL);
+		if(*philo->dead_flag)
+			break ;
 		if (philo->id % 2 == 0)
 		{
-			pthread_mutex_lock(philo->r_fork);
-			safe_print(philo, "has taken right fork\n");
-			pthread_mutex_lock(philo->l_fork);
-			safe_print(philo, "has taken left fork\n");
+			eating(philo, 1);
+			sleeping(philo);
+			thinking(philo);
 		}
 		else
 		{
-			pthread_mutex_lock(philo->l_fork);
-			safe_print(philo, "has taken left fork\n");
-			pthread_mutex_lock(philo->r_fork);
-			safe_print(philo, "has taken right fork\n");
+			eating(philo, 0);
+			sleeping(philo);
+			thinking(philo);
 		}
-		followed_instructions(philo);
 	}
 	return (NULL);
 }
 
-int	create_threads(t_data *data)
+int	create_threads(t_data *data, int i)
 {
-	int	i;
-	pthread_t		*threads;
 	pthread_t		monitor;
 
-	threads = malloc(sizeof(pthread_t) * data->philos->number_philos);
-	if (!threads)
-		return (1);
-	i = -1;
-	while (++i < data->philos->number_philos)
-	{
-		if (pthread_create(&threads[i], NULL, routine_ofphilo, &data->philos[i]) != 0)
-			break ;
-	}
-	i = -1;
 	if (pthread_create(&monitor, NULL, monitor_philos, data) != 0)
-		return (1);
-	pthread_detach(monitor);
-	while (++i < data->philos->number_philos)
+		cleanup(*data);
+	while (++i < data->philos[0].number_philos)
 	{
-		// if (data->philos[i].dead_flag)
-			// pthread_detach(data->p);
-		pthread_join(threads[i], NULL);
+		if (pthread_create(&data->philos[i].thread, NULL, routine_ofphilo, &data->philos[i]) != 0)
+			cleanup(*data);
 	}
-	free(threads);
+	if (pthread_join(monitor, NULL) != 0)
+		cleanup(*data);
+	i = -1;
+	while (++i < data->philos[0].number_philos)
+		if (pthread_join(data->philos[i].thread, NULL) != 0)
+			cleanup(*data);
 	return (0);
 }
 
@@ -102,7 +77,6 @@ int	main(int argc, char **argv)
 {
 	t_data	simulation;
 
-	// simulation = malloc(sizeof(t_data));
 	if (!(argc == 5 || argc == 6))
 	{
 		printf("Use:./philo n_philo t_die t_eat t_sleep [n_meals]\n");
@@ -110,15 +84,14 @@ int	main(int argc, char **argv)
 	}
 	if (args_validity(argv) == 1)
 		return (1);
+	memset(&simulation, 0, sizeof(t_data));
 	init_mutex_for_forks(&simulation, argv[1]);
-	init_philo(&simulation, argv, argc);
-	if (create_threads(&simulation) == 1)
+	init_philo(&simulation, argv, argc, -1);
+	if (create_threads(&simulation, -1) == 1)
 	{
 		printf("something goes wrong in threads management\n");
-		// free(simulation->forks);
 	}
 	cleanup(simulation);
-	free(simulation.forks);
 	free(simulation.philos);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kali <kali@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:45:45 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/03/28 18:13:59 by kali             ###   ########.fr       */
+/*   Updated: 2025/04/04 10:40:56 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,15 @@ long	get_time(void)
 {
 	struct timeval	timevalue;
 
-	gettimeofday(&timevalue, NULL);
-	return ((timevalue.tv_sec * 1000) + (timevalue.tv_usec / 1000)); //converts the both elements to ms and adding them to obtain the exact time as this 00.00.00
+	if (gettimeofday(&timevalue, NULL) <= 0)
+		return (0);
+	return ((timevalue.tv_sec * 1000) + (timevalue.tv_usec / 1000));
 }
 
-void	init_philo(t_data *data, char **argv, int argc)
+void	init_philo(t_data *data, char **argv, int argc, int i)
 {
 	int	num_philos;
-	int	i;
 
-	i = -1;
 	num_philos = ft_atoi(argv[1]);
 	if (!(data->philos = malloc(sizeof(t_philo) * num_philos)))
 		return ;
@@ -68,15 +67,14 @@ void	init_philo(t_data *data, char **argv, int argc)
 		data->philos[i].t_die = ft_atoi(argv[2]);
 		data->philos[i].t_eat = ft_atoi(argv[3]);
 		data->philos[i].t_sleep = ft_atoi(argv[4]);
+		data->philos[i].n_meals = -1;
 		if (argc == 6)
 			data->philos[i].n_meals = ft_atoi(argv[5]);
-		else
-			data->philos[i].n_meals = -1;
 		data->philos[i].meals_eaten = 0;
 		data->philos[i].start_time = get_time();
 		data->philos[i].last_meal = get_time();
 		data->philos[i].print_mtx = &data->print_mtx;
-		// data->death_mtx ;
+		data->philos[i].death_mtx = &data->death_mtx;
 		data->philos[i].meal_mtx = &data->meal_mtx;
 		data->philos[i].dead_flag = &data->dead_flag;
 		data->philos[i].l_fork = &data->forks[i];
@@ -101,39 +99,3 @@ void	init_mutex_for_forks(t_data *data, char *argv1)
 	pthread_mutex_init(&data->death_mtx, NULL);
 	pthread_mutex_init(&data->meal_mtx, NULL);
 }
-
-// int	check_dies(t_philo *philo)
-// {
-// 	long			time;
-// 	int	i;
-
-// 	i = -1;
-	
-// 	while (++i < philo->number_philos)
-// 	{
-// 		time = get_time() - philo->last_meal;
-// 		pthread_mutex_lock(&philo->deathmutex[i]);
-// 		if (time >= philo[i].t_die)
-// 		{
-// 			philo[i].died = 1;
-// 			printf("philosopher %d died\n", philo[i].id);
-// 			pthread_mutex_unlock(philo[i].deathmutex);
-// 			return (1);
-// 		}
-// 		pthread_mutex_unlock(philo[i].deathmutex);
-// 	}
-// 	return (0);
-// }
-
-// void	lock_forkes(t_philo *philo)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < philo->number_philos)
-// 	{
-// 		pthread_mutex_lock();
-// 	}
-	
-// }
-
