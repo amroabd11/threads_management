@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:45:45 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/04 10:40:56 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/05 09:57:29 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ long	get_time(void)
 {
 	struct timeval	timevalue;
 
-	if (gettimeofday(&timevalue, NULL) <= 0)
+	if (gettimeofday(&timevalue, NULL) < 0)
 		return (0);
 	return ((timevalue.tv_sec * 1000) + (timevalue.tv_usec / 1000));
 }
@@ -58,8 +58,6 @@ void	init_philo(t_data *data, char **argv, int argc, int i)
 	int	num_philos;
 
 	num_philos = ft_atoi(argv[1]);
-	if (!(data->philos = malloc(sizeof(t_philo) * num_philos)))
-		return ;
 	while (++i < num_philos)
 	{
 		data->philos[i].id = i + 1;
@@ -75,10 +73,10 @@ void	init_philo(t_data *data, char **argv, int argc, int i)
 		data->philos[i].last_meal = get_time();
 		data->philos[i].print_mtx = &data->print_mtx;
 		data->philos[i].death_mtx = &data->death_mtx;
-		data->philos[i].meal_mtx = &data->meal_mtx;
 		data->philos[i].dead_flag = &data->dead_flag;
 		data->philos[i].l_fork = &data->forks[i];
 		data->philos[i].r_fork = &data->forks[(i + 1) % num_philos];
+		pthread_mutex_init(&data->philos[i].meal_mtx, NULL);
 	}
 }
 
@@ -97,5 +95,5 @@ void	init_mutex_for_forks(t_data *data, char *argv1)
 		pthread_mutex_init(&data->forks[i], NULL);
 	pthread_mutex_init(&data->print_mtx, NULL);
 	pthread_mutex_init(&data->death_mtx, NULL);
-	pthread_mutex_init(&data->meal_mtx, NULL);
+	// pthread_mutex_init(&data->meal_mtx, NULL);
 }
