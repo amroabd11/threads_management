@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   errors.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/05 10:48:08 by aamraouy          #+#    #+#             */
+/*   Updated: 2025/04/05 10:48:24 by aamraouy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-int error_message(char *msg)
+int	error_message(char *msg)
 {
-    write(1, msg, ft_strlen(msg));
-    return (1);//TODO ft_strlen
+	write(1, msg, ft_strlen(msg));
+	return (1);
 }

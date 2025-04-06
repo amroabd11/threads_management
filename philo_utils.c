@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:45:45 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/05 09:57:29 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/05 10:49:30 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ int	content(char *argument)
 int	args_validity(char **argv)
 {
 	if (ft_atoi(argv[1]) <= 0 || content(argv[1]) == 0)
-		return(error_message("invalid nbr of philosophers\n"));
+		return (error_message("invalid nbr of philosophers\n"));
 	if (ft_atoi(argv[2]) <= 0 || content(argv[2]) == 0)
-		return(error_message("invalid time to die\n"));
+		return (error_message("invalid time to die\n"));
 	if (ft_atoi(argv[3]) <= 0 || content(argv[3]) == 0)
-		return(error_message("invalid time to eat\n"));
+		return (error_message("invalid time to eat\n"));
 	if (ft_atoi(argv[4]) <= 0 || content(argv[4]) == 0)
 		return (error_message("invalid time to sleep\n"));
 	if (argv[5])
@@ -95,5 +95,4 @@ void	init_mutex_for_forks(t_data *data, char *argv1)
 		pthread_mutex_init(&data->forks[i], NULL);
 	pthread_mutex_init(&data->print_mtx, NULL);
 	pthread_mutex_init(&data->death_mtx, NULL);
-	// pthread_mutex_init(&data->meal_mtx, NULL);
 }

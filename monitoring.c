@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:10:26 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/05 09:53:37 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/05 10:52:18 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,13 @@
 int	check_philo_meals(t_data *data, int i)
 {
 	int	all_ate;
-	// int	meals;
 
 	all_ate = 0;
 	while (++i < data->philos[0].number_philos)
 	{
 		pthread_mutex_lock(&data->philos[i].meal_mtx);
-		if (data->philos[i].n_meals != -1 &&
-		data->philos[i].meals_eaten >= data->philos[i].n_meals)
+		if (data->philos[i].n_meals != -1
+			&& data->philos[i].meals_eaten >= data->philos[i].n_meals)
 			all_ate++;
 		pthread_mutex_unlock(&data->philos[i].meal_mtx);
 	}
@@ -45,7 +44,8 @@ int	death_check(long time_since_meal, t_data *data, int i)
 		{
 			pthread_mutex_lock(&data->death_mtx);
 			*data->philos[i].dead_flag = 1;
-			printf("%ld %d died\n", get_time() - data->philos[i].start_time, data->philos[i].id);
+			printf("%ld %d died\n", get_time()
+				- data->philos[i].start_time, data->philos[i].id);
 			pthread_mutex_unlock(&data->death_mtx);
 		}
 		return (1);
@@ -55,7 +55,7 @@ int	death_check(long time_since_meal, t_data *data, int i)
 
 void	*monitor_philos(void *arg)
 {
-	t_data *data;
+	t_data	*data;
 	long	time_since_meal;
 	int		i;
 
@@ -66,17 +66,13 @@ void	*monitor_philos(void *arg)
 		while (++i < data->philos[0].number_philos)
 		{
 			pthread_mutex_lock(&data->philos[i].meal_mtx);
-			// printf("philo %d locked last meal \n", data->philos[i].id);
 			time_since_meal = get_time() - data->philos[i].last_meal;
-			// printf("timing  =  %ld\n", time_since_meal);
 			if (death_check(time_since_meal, data, i))
 			{
 				pthread_mutex_unlock(&data->philos[i].meal_mtx);
 				return (NULL);
 			}
 			pthread_mutex_unlock(&data->philos[i].meal_mtx);
-			// if (i == 3)
-			// 	exit(1);
 		}
 		if (check_philo_meals(data, -1))
 			return (NULL);
