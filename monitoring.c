@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:10:26 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/05 10:52:18 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/07 14:46:38 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int	check_philo_meals(t_data *data, int i)
 	}
 	if (all_ate == data->philos[0].number_philos)
 	{
-		printf("all philos ate\n");
 		pthread_mutex_lock(&data->death_mtx);
 		data->dead_flag = 1;
 		pthread_mutex_unlock(&data->death_mtx);

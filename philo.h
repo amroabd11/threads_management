@@ -1,20 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/07 14:58:57 by aamraouy          #+#    #+#             */
+/*   Updated: 2025/04/07 15:12:29 by aamraouy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
-#define PHILO_H
+# define PHILO_H
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <string.h>
 # include <pthread.h>
 # include <sys/time.h>
+
 typedef struct philo
 {
 	int				number_philos;
-	int				t_eat;
-	int				t_die;
+	long			t_eat;
+	long			t_die;
 	long			start_time;
 	int				id;
-	int				t_sleep;
-	int				t_think;
+	long			t_sleep;
+	long			t_think;
 	int				n_meals;
 	int				meals_eaten;
 	int				*dead_flag;
@@ -27,7 +40,7 @@ typedef struct philo
 	pthread_mutex_t	meal_mtx;
 }	t_philo;
 
-typedef struct	s_data
+typedef struct s_data
 {
 	t_philo			*philos;
 	pthread_mutex_t	*forks;
@@ -46,7 +59,7 @@ int				death_check(long time_since_meal, t_data *data, int i);
 void			*monitor_philos(void *arg);
 int				error_message(char *msg);
 long			get_time(void);
-int				ft_atoi(const char *str);
+long			ft_atoi(const char *str);
 void			init_mutex_for_forks(t_data *data, char *argv1);
 void			safe_print(t_philo *philo, char *msg);
 int				ft_strlen(char *str);
