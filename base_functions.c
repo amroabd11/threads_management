@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:19:53 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/07 15:03:59 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/11 11:17:05 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ long	ft_atoi(const char *str)
 	int		next_digit;
 	long	result;
 
-	result = 0;
-	if(!str)
+	if (!str)
 		return (0);
+	result = 0;
 	while (*str == ' ')
 		str++;
 	if ((*str == '-' || *str == '+') && *(str + 1))
@@ -53,9 +53,19 @@ void	safe_print(t_philo *philo, char *msg)
 {
 	long	time;
 
-	pthread_mutex_lock(philo->print_mtx);
 	time = get_time();
-	if (!*philo->dead_flag)
+	if (msg[0] == 'd' && msg[1] == 'i' && msg[2] == 'e' && msg[3] == 'd')
+	{
+		pthread_mutex_lock(philo->print_mtx);
 		printf("%zu %d %s\n", time - philo->start_time, philo->id, msg);
-	pthread_mutex_unlock(philo->print_mtx);
+		pthread_mutex_unlock(philo->print_mtx);
+	}
+	pthread_mutex_lock(philo->death_mtx);
+	if (!*philo->dead_flag)
+	{
+		pthread_mutex_lock(philo->print_mtx);
+		printf("%zu %d %s\n", time - philo->start_time, philo->id, msg);
+		pthread_mutex_unlock(philo->print_mtx);
+	}
+	pthread_mutex_unlock(philo->death_mtx);
 }

@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:45:45 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/05 10:49:30 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:19:59 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,19 @@
 int	content(char *argument)
 {
 	int	i;
+	int	flag;
 
 	i = 0;
+	flag = 0;
 	if (!argument)
 		return (0);
 	while (argument[i])
 	{
-		if (argument[i] < '0' || argument[i] > '9')
+		if ((argument[i] < '0' || argument[i] > '9') && argument[i] != '+')
+			return (0);
+		if (argument[i] == '+')
+			flag++;
+		if (flag == 2)
 			return (0);
 		i++;
 	}
@@ -32,11 +38,11 @@ int	args_validity(char **argv)
 {
 	if (ft_atoi(argv[1]) <= 0 || content(argv[1]) == 0)
 		return (error_message("invalid nbr of philosophers\n"));
-	if (ft_atoi(argv[2]) <= 0 || content(argv[2]) == 0)
+	if (ft_atoi(argv[2]) < 60 || content(argv[2]) == 0)
 		return (error_message("invalid time to die\n"));
-	if (ft_atoi(argv[3]) <= 0 || content(argv[3]) == 0)
+	if (ft_atoi(argv[3]) < 60 || content(argv[3]) == 0)
 		return (error_message("invalid time to eat\n"));
-	if (ft_atoi(argv[4]) <= 0 || content(argv[4]) == 0)
+	if (ft_atoi(argv[4]) < 60 || content(argv[4]) == 0)
 		return (error_message("invalid time to sleep\n"));
 	if (argv[5])
 		if (ft_atoi(argv[5]) <= 0 || content(argv[5]) == 0)
@@ -60,6 +66,7 @@ void	init_philo(t_data *data, char **argv, int argc, int i)
 	num_philos = ft_atoi(argv[1]);
 	while (++i < num_philos)
 	{
+		data->philos[i].is_eating = 0;
 		data->philos[i].id = i + 1;
 		data->philos[i].number_philos = num_philos;
 		data->philos[i].t_die = ft_atoi(argv[2]);
@@ -88,9 +95,6 @@ void	init_mutex_for_forks(t_data *data, char *argv1)
 	data->dead_flag = 0;
 	i = -1;
 	num_philos = ft_atoi(argv1);
-	data->forks = malloc(sizeof(pthread_mutex_t) * num_philos);
-	if (!data->forks)
-		return ;
 	while (++i < num_philos)
 		pthread_mutex_init(&data->forks[i], NULL);
 	pthread_mutex_init(&data->print_mtx, NULL);

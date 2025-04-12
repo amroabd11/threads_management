@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:10:26 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/07 14:46:38 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/11 11:18:12 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,19 @@ int	check_philo_meals(t_data *data, int i)
 
 int	death_check(long time_since_meal, t_data *data, int i)
 {
-	if (time_since_meal > data->philos[i].t_die)
+	int is_philo_eating;
+
+	pthread_mutex_lock(&data->philos[i].meal_mtx);
+	is_philo_eating = data->philos[i].is_eating;
+	pthread_mutex_unlock(&data->philos[i].meal_mtx);
+	if (time_since_meal >= data->philos[i].t_die && is_philo_eating == 0)
 	{
 		if (!data->dead_flag)
 		{
 			pthread_mutex_lock(&data->death_mtx);
-			*data->philos[i].dead_flag = 1;
-			printf("%ld %d died\n", get_time()
-				- data->philos[i].start_time, data->philos[i].id);
+			data->dead_flag = 1;
 			pthread_mutex_unlock(&data->death_mtx);
+			safe_print(&data->philos[i], "died");
 		}
 		return (1);
 	}
@@ -66,15 +70,12 @@ void	*monitor_philos(void *arg)
 		{
 			pthread_mutex_lock(&data->philos[i].meal_mtx);
 			time_since_meal = get_time() - data->philos[i].last_meal;
-			if (death_check(time_since_meal, data, i))
-			{
-				pthread_mutex_unlock(&data->philos[i].meal_mtx);
-				return (NULL);
-			}
 			pthread_mutex_unlock(&data->philos[i].meal_mtx);
+			if (death_check(time_since_meal, data, i))
+				return (NULL);
 		}
 		if (check_philo_meals(data, -1))
 			return (NULL);
 	}
-	return (NULL);
+	return (arg);
 }
