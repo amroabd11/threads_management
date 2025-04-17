@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:10:26 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/11 11:18:12 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/12 16:21:44 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	death_check(long time_since_meal, t_data *data, int i)
 	pthread_mutex_lock(&data->philos[i].meal_mtx);
 	is_philo_eating = data->philos[i].is_eating;
 	pthread_mutex_unlock(&data->philos[i].meal_mtx);
-	if (time_since_meal >= data->philos[i].t_die && is_philo_eating == 0)
+	if (time_since_meal > data->philos[i].t_die && is_philo_eating == 0)
 	{
 		if (!data->dead_flag)
 		{

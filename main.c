@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:56:47 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/12 13:19:27 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/17 10:09:20 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	*routine_ofphilo(void *arg)
 		}
 		action(philo);
 	}
-	return (arg);
+	return (NULL);
 }
 
 int	create_threads(t_data *data, int i)
@@ -63,7 +63,12 @@ int	create_threads(t_data *data, int i)
 		return (cleanup(*data));
 	i = -1;
 	while (++i < data->philos[0].number_philos)
-		pthread_detach(data->philos[i].thread);
+		if (pthread_detach(data->philos[i].thread) != 0)
+			return (cleanup(*data));
+	// pthread_mutex_lock(&data->death_mtx);
+	// // if(data->dead_flag)
+	// // 	printf("fffff\n");
+	// pthread_mutex_unlock(&data->death_mtx);
 	return (0);
 }
 
@@ -71,10 +76,14 @@ int	cleanup(t_data data)
 {
 	int	i;
 
+	i = -1;
+	// while (++i < data.philos[0].number_philos)
+	// 	pthread_detach(data.philos[i].thread);
 	i = 0;
 	while (i < data.philos->number_philos)
 	{
 		pthread_mutex_destroy(&data.forks[i]);
+		pthread_mutex_destroy(&data.philos[i].meal_mtx);
 		i++;
 	}
 	pthread_mutex_destroy(&data.print_mtx);
@@ -100,5 +109,6 @@ int	main(int argc, char **argv)///////still need to fix atoi to accept (+)
 		printf("error in threads management\n");
 		return (EXIT_FAILURE);
 	}
+	cleanup(simulation);
 	return (0);
 }

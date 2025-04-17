@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:19:53 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/11 11:17:05 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/17 10:04:04 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	safe_print(t_philo *philo, char *msg)
 		pthread_mutex_lock(philo->print_mtx);
 		printf("%zu %d %s\n", time - philo->start_time, philo->id, msg);
 		pthread_mutex_unlock(philo->print_mtx);
+		return ;
 	}
 	pthread_mutex_lock(philo->death_mtx);
 	if (!*philo->dead_flag)
