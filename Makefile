@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Wall  -fsanitize=thread #-fsanitize=address
+CFLAGS = -Wall -Wextra -Wall  #-fsanitize=thread  #-fsanitize=address
 NAME = philo
 SRC = main.c philo_utils.c errors.c base_functions.c monitoring.c eat_sle_thk.c
 OBJ = ${SRC:.c=.o}

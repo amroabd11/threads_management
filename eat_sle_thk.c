@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 10:36:08 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/17 10:01:14 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/17 15:42:12 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ void	eating(t_philo *philo)
 	pthread_mutex_unlock(&philo->meal_mtx);
 	pthread_mutex_unlock(philo->r_fork);
 	pthread_mutex_unlock(philo->l_fork);
-	
-	// exit(1);
 }
 
 void	sleeping(t_philo *philo)

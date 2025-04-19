@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:10:26 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/12 16:21:44 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/17 15:32:36 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int	death_check(long time_since_meal, t_data *data, int i)
 	int is_philo_eating;
 
 	pthread_mutex_lock(&data->philos[i].meal_mtx);
+	time_since_meal = get_time() - data->philos[i].last_meal;
 	is_philo_eating = data->philos[i].is_eating;
 	pthread_mutex_unlock(&data->philos[i].meal_mtx);
 	if (time_since_meal > data->philos[i].t_die && is_philo_eating == 0)
@@ -62,15 +63,13 @@ void	*monitor_philos(void *arg)
 	long	time_since_meal;
 	int		i;
 
+	time_since_meal = 0;
 	data = (t_data *)arg;
 	while (1)
 	{
 		i = -1;
 		while (++i < data->philos[0].number_philos)
 		{
-			pthread_mutex_lock(&data->philos[i].meal_mtx);
-			time_since_meal = get_time() - data->philos[i].last_meal;
-			pthread_mutex_unlock(&data->philos[i].meal_mtx);
 			if (death_check(time_since_meal, data, i))
 				return (NULL);
 		}

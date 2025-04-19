@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:45:45 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/11 15:19:59 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/17 15:51:32 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ int	content(char *argument)
 
 int	args_validity(char **argv)
 {
-	if (ft_atoi(argv[1]) <= 0 || content(argv[1]) == 0)
+	if ((ft_atoi(argv[1]) <= 0 || ft_atoi(argv[1]) > 200)
+		|| content(argv[1]) == 0)
 		return (error_message("invalid nbr of philosophers\n"));
 	if (ft_atoi(argv[2]) < 60 || content(argv[2]) == 0)
 		return (error_message("invalid time to die\n"));
@@ -80,6 +81,7 @@ void	init_philo(t_data *data, char **argv, int argc, int i)
 		data->philos[i].last_meal = get_time();
 		data->philos[i].print_mtx = &data->print_mtx;
 		data->philos[i].death_mtx = &data->death_mtx;
+		data->philos[i].d = &data->d;
 		data->philos[i].dead_flag = &data->dead_flag;
 		data->philos[i].l_fork = &data->forks[i];
 		data->philos[i].r_fork = &data->forks[(i + 1) % num_philos];
