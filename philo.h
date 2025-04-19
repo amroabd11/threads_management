@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 14:58:57 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/17 15:51:42 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/19 21:31:37 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ typedef struct philo
 	int				*dead_flag;
 	long			last_meal;
 	pthread_t		thread;
-	pthread_mutex_t	*l_fork; //array of left forks,
-	pthread_mutex_t	*r_fork; //array of right forks;
+	pthread_mutex_t	*l_fork;
+	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*print_mtx;
 	pthread_mutex_t	*d;
 	pthread_mutex_t	*death_mtx;
@@ -52,6 +52,8 @@ typedef struct s_data
 	int				dead_flag;
 }	t_data;
 
+void	ft_usleep(long ms, t_philo *philo);
+int				checker(t_philo	*philo);
 int				cleanup(t_data data);
 void			init_philo(t_data *data, char **argv, int argc, int i);
 void			thinking(t_philo *philo);

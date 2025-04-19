@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:19:53 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/17 15:56:52 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/19 21:31:29 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,29 @@ void	safe_print(t_philo *philo, char *msg)
 		pthread_mutex_unlock(philo->print_mtx);
 	}
 	pthread_mutex_unlock(philo->death_mtx);
+}
+
+int	checker(t_philo	*philo)
+{
+	pthread_mutex_lock(philo->death_mtx);
+	if (*philo->dead_flag)
+	{
+		pthread_mutex_unlock(philo->death_mtx);
+		return (1);
+	}
+	pthread_mutex_unlock(philo->death_mtx);
+	return (0);
+}
+
+void	ft_usleep(long ms, t_philo *philo)
+{
+	long	start;
+
+	start = get_time();
+	while (!checker(philo))
+	{
+		if (get_time() - start >= ms)
+			break ;
+		usleep(100);
+	}
 }

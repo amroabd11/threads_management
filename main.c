@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:56:47 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/17 15:30:42 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/19 22:00:59 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,25 @@ void	action(t_philo *philo)
 void	*routine_ofphilo(void *arg)
 {
 	t_philo	*philo;
-	int is_dead;
 
 	philo = (t_philo *)arg;
-	pthread_mutex_lock(philo->death_mtx);
-	is_dead = *philo->dead_flag;
-	pthread_mutex_unlock(philo->death_mtx);
-	if (philo->id % 2 == 0)
-		usleep(500);
-	while (!is_dead)
+	// if (philo->id % 2 == 0)
+	// 	ft_usleep(100, philo);// i need to implement my own usleep
+	while (1)
 	{
-		if (philo->id == philo->number_philos && philo->number_philos != 1)
+		if (checker(philo))
+			break ;
+		if (philo->id % 2)
 		{
+			pthread_mutex_lock(philo->l_fork);
+			safe_print(philo, "has taken fork");
 			pthread_mutex_lock(philo->r_fork);
 			safe_print(philo, "has taken fork");
 		}
 		else
 		{
+			pthread_mutex_lock(philo->r_fork);
+			safe_print(philo, "has taken fork");
 			pthread_mutex_lock(philo->l_fork);
 			safe_print(philo, "has taken fork");
 		}
@@ -51,19 +53,19 @@ int	create_threads(t_data *data, int i)
 {
 	pthread_t		monitor;
 
-	if (pthread_create(&monitor, NULL, monitor_philos, data) != 0)
-		return (cleanup(*data));
 	while (++i < data->philos[0].number_philos)
 	{
 		if (pthread_create(&data->philos[i].thread, NULL,
-				routine_ofphilo, &data->philos[i]) != 0)
+			routine_ofphilo, &data->philos[i]) != 0)
 			return (cleanup(*data));
 	}
+	if (pthread_create(&monitor, NULL, monitor_philos, data) != 0)
+		return (cleanup(*data));
 	if (pthread_join(monitor, NULL) != 0)
 		return (cleanup(*data));
 	i = -1;
 	while (++i < data->philos[0].number_philos)
-		if (pthread_detach(data->philos[i].thread) != 0)
+		if (pthread_join(data->philos[i].thread, NULL) != 0)
 			return (cleanup(*data));
 	return (0);
 }
