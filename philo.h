@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 14:58:57 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/19 21:31:37 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/05/21 10:57:39 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,21 +52,18 @@ typedef struct s_data
 	int				dead_flag;
 }	t_data;
 
-void	ft_usleep(long ms, t_philo *philo);
-int				checker(t_philo	*philo);
-int				cleanup(t_data data);
-void			init_philo(t_data *data, char **argv, int argc, int i);
-void			thinking(t_philo *philo);
-void			sleeping(t_philo *philo);
-void			eating(t_philo *philo);
-int				args_validity(char **argv);
-int				death_check(long time_since_meal, t_data *data, int i);
-void			*monitor_philos(void *arg);
-int				error_message(char *msg);
-long			get_time(void);
-long			ft_atoi(const char *str);
-void			init_mutex_for_forks(t_data *data, char *argv1);
-void			safe_print(t_philo *philo, char *msg);
-int				ft_strlen(char *str);
+void	custom_usleep(long ms, t_philo *philo);
+int		checker(t_philo	*philo);
+int		cleanup(t_data data);
+void	initialize_each_philo(t_data *data, char **argv, int argc, int i);
+int		args_validity(char **argv);
+int		death_check(long time_since_meal, t_data *data, int i);
+void	*monitor_philos(void *arg);
+int		error_message(char *msg);
+long	get_time(void);
+long	ft_atoi(const char *str);
+void	init_mutex_for_forks(t_data *data, char *argv1);
+void	safe_print(t_philo *philo, char *msg);
+int		ft_strlen(char *str);
 
 #endif

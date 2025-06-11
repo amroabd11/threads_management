@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:45:45 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/17 15:51:32 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/05/21 10:34:12 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ long	get_time(void)
 	return ((timevalue.tv_sec * 1000) + (timevalue.tv_usec / 1000));
 }
 
-void	init_philo(t_data *data, char **argv, int argc, int i)
+void	initialize_each_philo(t_data *data, char **argv, int argc, int i)
 {
 	int	num_philos;
 

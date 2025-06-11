@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:48:08 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/05 10:48:24 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:14:56 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,21 @@
 int	error_message(char *msg)
 {
 	write(1, msg, ft_strlen(msg));
+	return (1);
+}
+
+int	cleanup(t_data data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data.philos->number_philos)
+	{
+		pthread_mutex_destroy(&data.forks[i]);
+		pthread_mutex_destroy(&data.philos[i].meal_mtx);
+		i++;
+	}
+	pthread_mutex_destroy(&data.print_mtx);
+	pthread_mutex_destroy(&data.death_mtx);
 	return (1);
 }

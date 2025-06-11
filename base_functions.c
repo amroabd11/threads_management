@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 12:19:53 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/19 21:31:29 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/05/21 10:57:20 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	checker(t_philo	*philo)
 	return (0);
 }
 
-void	ft_usleep(long ms, t_philo *philo)
+void	custom_usleep(long ms, t_philo *philo)
 {
 	long	start;
 
