@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:56:47 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/06/11 21:18:40 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/06/12 11:35:53 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,18 +74,13 @@ void	*thread_ofphilo(void *arg)
 
 int	create_philos(t_data *data, int i)
 {
-	pthread_t		monitor;
-
 	while (++i < data->philos[0].number_philos)
 	{
 		if (pthread_create(&data->philos[i].thread, NULL,
 				thread_ofphilo, &data->philos[i]) != 0)
 			return (cleanup(*data));
 	}
-	if (pthread_create(&monitor, NULL, monitor_philos, data) != 0)
-		return (cleanup(*data));
-	if (pthread_join(monitor, NULL) != 0)
-		return (cleanup(*data));
+	monitor_philos(data);
 	i = -1;
 	while (++i < data->philos[0].number_philos)
 	{

@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 14:58:57 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/05/21 10:57:39 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/06/12 11:30:54 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int		cleanup(t_data data);
 void	initialize_each_philo(t_data *data, char **argv, int argc, int i);
 int		args_validity(char **argv);
 int		death_check(long time_since_meal, t_data *data, int i);
-void	*monitor_philos(void *arg);
+void	monitor_philos(t_data *data);
 int		error_message(char *msg);
 long	get_time(void);
 long	ft_atoi(const char *str);

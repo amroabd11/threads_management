@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:10:26 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/04/24 10:17:36 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/06/12 11:36:56 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,24 +57,21 @@ int	death_check(long time_since_meal, t_data *data, int i)
 	return (0);
 }
 
-void	*monitor_philos(void *arg)
+void	monitor_philos(t_data *data)
 {
-	t_data	*data;
 	long	time_since_meal;
 	int		i;
 
 	time_since_meal = 0;
-	data = (t_data *)arg;
 	while (1)
 	{
 		i = -1;
 		while (++i < data->philos[0].number_philos)
 		{
 			if (death_check(time_since_meal, data, i))
-				return (NULL);
+				return ;
 		}
 		if (check_philo_meals(data, -1))
-			return (NULL);
+			return ;
 	}
-	return (arg);
 }
