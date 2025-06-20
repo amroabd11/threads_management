@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:56:47 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/06/20 12:54:29 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/06/20 20:45:05 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,10 @@ void	action(t_philo *philo)
 	pthread_mutex_lock(&philo->meal_mtx);
 	philo->is_eating = 0;
 	pthread_mutex_unlock(&philo->meal_mtx);
-	pthread_mutex_unlock(philo->r_fork);
-	pthread_mutex_unlock(philo->l_fork);
+	if (philo->id % 2 != 0)
+		pthread_mutex_unlock(philo->r_fork);
+	if (philo->id % 2 == 0)
+		pthread_mutex_unlock(philo->l_fork);
 	safe_print(philo, "is sleeping");
 	custom_usleep(philo->t_sleep, philo);
 	safe_print(philo, "is thinking");
@@ -49,22 +51,26 @@ void	*thread_ofphilo(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	if (philo->id % 2 == 0)
-		custom_usleep(200, philo);
-	while (1)
+	// if (philo->id % 2 == 0)
+	// 	usleep(200);
+	while (!checker(philo))
 	{
-		if (checker(philo))
-			break ;
-		pthread_mutex_lock(philo->l_fork);
-		safe_print(philo, "has taken a fork");
+		if(philo->id % 2 == 0 || philo->number_philos == 1)
+		{
+			pthread_mutex_lock(philo->l_fork);
+			safe_print(philo, "has taken a fork");
+		}
 		if (philo->number_philos == 1)
 		{
 			custom_usleep(philo->t_die, philo);
 			pthread_mutex_unlock(philo->l_fork);
 			break ;
 		}
-		pthread_mutex_lock(philo->r_fork);
-		safe_print(philo, "has taken a fork");
+		if (philo->id % 2 != 0)
+		{
+			pthread_mutex_lock(philo->r_fork);
+			safe_print(philo, "has taken a fork");
+		}
 		action(philo);
 		if (check_philo_done_eating(philo) == 1)
 			break ;
