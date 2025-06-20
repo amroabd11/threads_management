@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 14:58:57 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/06/12 11:30:54 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/06/20 12:56:16 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,15 @@ typedef struct philo
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*print_mtx;
-	pthread_mutex_t	*d;
 	pthread_mutex_t	*death_mtx;
 	pthread_mutex_t	meal_mtx;
 }	t_philo;
 
 typedef struct s_data
 {
-	t_philo			philos[600];
-	pthread_mutex_t	forks[600];
+	t_philo			*philos;
+	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_mtx;
-	pthread_mutex_t	d;
 	pthread_mutex_t	death_mtx;
 	int				dead_flag;
 }	t_data;

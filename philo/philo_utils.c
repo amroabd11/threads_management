@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:45:45 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/05/21 10:34:12 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/06/20 12:43:10 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ void	initialize_each_philo(t_data *data, char **argv, int argc, int i)
 		data->philos[i].last_meal = get_time();
 		data->philos[i].print_mtx = &data->print_mtx;
 		data->philos[i].death_mtx = &data->death_mtx;
-		data->philos[i].d = &data->d;
 		data->philos[i].dead_flag = &data->dead_flag;
 		data->philos[i].l_fork = &data->forks[i];
 		data->philos[i].r_fork = &data->forks[(i + 1) % num_philos];
@@ -94,9 +93,15 @@ void	init_mutex_for_forks(t_data *data, char *argv1)
 	int	i;
 	int	num_philos;
 
-	data->dead_flag = 0;
-	i = -1;
 	num_philos = ft_atoi(argv1);
+	data->philos = malloc(sizeof(t_philo) * num_philos);
+	if (!data->philos)
+		return ;
+	data->forks = malloc(sizeof(pthread_mutex_t) * num_philos);
+	if (!data->forks)
+		return ;
+	i = -1;
+	data->dead_flag = 0;
 	while (++i < num_philos)
 		pthread_mutex_init(&data->forks[i], NULL);
 	pthread_mutex_init(&data->print_mtx, NULL);

@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 10:56:47 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/06/12 11:35:53 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/06/20 12:54:29 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,6 @@ int	main(int argc, char **argv)
 		printf("error in threads management\n");
 		return (EXIT_FAILURE);
 	}
+	cleanup(simulation);
 	return (0);
 }
