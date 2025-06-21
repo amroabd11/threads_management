@@ -6,7 +6,7 @@
 /*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:48:08 by aamraouy          #+#    #+#             */
-/*   Updated: 2025/06/20 13:22:25 by aamraouy         ###   ########.fr       */
+/*   Updated: 2025/06/21 22:24:40 by aamraouy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,9 @@ int	cleanup(t_data data)
 	{
 		pthread_mutex_destroy(&data.forks[i]);
 		pthread_mutex_destroy(&data.philos[i].meal_mtx);
-		// pthread_mutex_destroy(data.philos[i].l_fork);
-		// pthread_mutex_destroy(data.philos[i].r_fork);
 		i++;
 	}
 	free(data.philos);
 	free(data.forks);
-	// pthread_mutex_destroy(&data.print_mtx);
-	// pthread_mutex_destroy(&data.death_mtx);
 	return (1);
 }
