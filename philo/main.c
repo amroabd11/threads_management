@@ -67,9 +67,11 @@ void	*thread_ofphilo(void *arg)
 int	create_philos(t_data *data, int i)
 {
 	if (data->philos[0].number_philos == 1)
-	{
+	{ //here i need to add a mutex lock so that i will be following the requirements in the correction sheet
+		//pthread_mutex_lock();
 		safe_print(&data->philos[0], "has taken a fork");
 		custom_usleep(data->philos[0].t_die, &data->philos[0]);
+		//pthread_mutex_unlock();
 		safe_print(&data->philos[0], "died");
 		return (0);
 	}
