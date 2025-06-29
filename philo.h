@@ -1,0 +1,67 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aamraouy <aamraouy@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/07 14:58:57 by aamraouy          #+#    #+#             */
+/*   Updated: 2025/06/20 12:56:16 by aamraouy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef PHILO_H
+# define PHILO_H
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <string.h>
+# include <pthread.h>
+# include <sys/time.h>
+
+typedef struct philo
+{
+	int				number_philos;
+	long			t_eat;
+	long			t_die;
+	long			start_time;
+	int				is_eating;
+	int				id;
+	long			t_sleep;
+	long			t_think;
+	int				n_meals;
+	int				meals_eaten;
+	int				*dead_flag;
+	long			last_meal;
+	pthread_t		thread;
+	pthread_mutex_t	*l_fork;
+	pthread_mutex_t	*r_fork;
+	pthread_mutex_t	*print_mtx;
+	pthread_mutex_t	*death_mtx;
+	pthread_mutex_t	meal_mtx;
+}	t_philo;
+
+typedef struct s_data
+{
+	t_philo			*philos;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	print_mtx;
+	pthread_mutex_t	death_mtx;
+	int				dead_flag;
+}	t_data;
+
+void	custom_usleep(long ms, t_philo *philo);
+int		checker(t_philo	*philo);
+int		cleanup(t_data data);
+void	initialize_each_philo(t_data *data, char **argv, int argc, int i);
+int		args_validity(char **argv);
+int		death_check(long time_since_meal, t_data *data, int i);
+void	monitor_philos(t_data *data);
+int		error_message(char *msg);
+long	get_time(void);
+long	ft_atoi(const char *str);
+void	init_mutex_for_forks(t_data *data, char *argv1);
+void	safe_print(t_philo *philo, char *msg);
+int		ft_strlen(char *str);
+
+#endif
